@@ -8,3 +8,6 @@ install_dependencies:
 
 run_precommit:
 	poetry run pre-commit run --all-files
+
+run_tests:
+	poetry run pytest tests/
