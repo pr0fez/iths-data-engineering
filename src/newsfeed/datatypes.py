@@ -20,7 +20,7 @@ class BlogInfo(pydantic.BaseModel):
 
 class BlogSummary(pydantic.BaseModel):
     title: str
-    summary: str
+    text: str
 
     @property
     def filename(self) -> str:

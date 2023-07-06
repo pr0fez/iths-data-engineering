@@ -70,7 +70,7 @@ def main(blog_name: str, summary_type: str = "default") -> None:
         output = chain.run(docs)
         logger.debug(f"\n{output}")
 
-        summary = BlogSummary(summary=output, title=article.title)
+        summary = BlogSummary(text=output, title=article.title)
         summaries[article] = summary
 
     save_summaries(summaries, blog_name)

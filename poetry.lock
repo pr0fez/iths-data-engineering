@@ -368,6 +368,40 @@ typing-inspect = ">=0.4.0"
 dev = ["flake8", "hypothesis", "ipython", "mypy (>=0.710)", "portray", "pytest (>=7.2.0)", "setuptools", "simplejson", "twine", "types-dataclasses", "wheel"]
 
 [[package]]
+name = "discord"
+version = "2.3.1"
+description = "A mirror package for discord.py. Please install that instead."
+optional = false
+python-versions = "*"
+files = [
+    {file = "discord-2.3.1-py3-none-any.whl", hash = "sha256:6bce94c14019e62baf1d3426603ed388e564a1d6f2239404ea42d172181083b3"},
+    {file = "discord-2.3.1.tar.gz", hash = "sha256:c180bea8f0db059b3cdd8008d6de88d9fce4283d6301cb2c9f395b5150138c32"},
+]
+
+[package.dependencies]
+"discord.py" = ">=2.3.1"
+
+[[package]]
+name = "discord-py"
+version = "2.3.1"
+description = "A Python wrapper for the Discord API"
+optional = false
+python-versions = ">=3.8.0"
+files = [
+    {file = "discord.py-2.3.1-py3-none-any.whl", hash = "sha256:149652f24da299706270bf8c03c2fcf80cf1caf3a480744c61d5b001688b380d"},
+    {file = "discord.py-2.3.1.tar.gz", hash = "sha256:8eb4fe66b5d503da6de3a8425e23012711dc2fbcd7a782107a92beac15ee3459"},
+]
+
+[package.dependencies]
+aiohttp = ">=3.7.4,<4"
+
+[package.extras]
+docs = ["sphinx (==4.4.0)", "sphinxcontrib-trio (==1.1.2)", "sphinxcontrib-websupport", "typing-extensions (>=4.3,<5)"]
+speed = ["Brotli", "aiodns (>=1.1)", "cchardet (==2.1.7)", "orjson (>=3.5.4)"]
+test = ["coverage[toml]", "pytest", "pytest-asyncio", "pytest-cov", "pytest-mock", "typing-extensions (>=4.3,<5)"]
+voice = ["PyNaCl (>=1.3.0,<1.6)"]
+
+[[package]]
 name = "distlib"
 version = "0.3.6"
 description = "Distribution utilities"
@@ -1770,4 +1804,4 @@ multidict = ">=4.0"
 [metadata]
 lock-version = "2.0"
 python-versions = "~3.10"
-content-hash = "566e009c0ef5a8201ff96203f91b8cb2140d3b4518943dc7fe2576182a5c1ffe"
+content-hash = "138a7972ea6a2c47c90cb597219a3c5c5827e4dd02a4b80c7e474d3331e95d90"
