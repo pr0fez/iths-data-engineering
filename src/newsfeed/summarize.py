@@ -31,7 +31,7 @@ PROMPT_TEMPLATES = {
 
 def load_articles(blog_name: str) -> list[BlogInfo]:
     articles = []
-    save_dir = Path("data/datasets", blog_name, "articles")
+    save_dir = Path("data/data_warehouse", blog_name, "articles")
     for article_file in save_dir.glob("**/*.json"):
         article = pydantic.parse_file_as(BlogInfo, article_file)
         # logger.debug(article)
@@ -40,8 +40,8 @@ def load_articles(blog_name: str) -> list[BlogInfo]:
     return articles
 
 
-def save_summaries(summaries: BlogSummary, blog_name: str) -> None:
-    save_dir = Path("data/datasets", blog_name, "summaries")
+def save_summaries(summaries: dict[BlogInfo, BlogSummary], blog_name: str) -> None:
+    save_dir = Path("data/data_warehouse", blog_name, "summaries")
     save_dir.mkdir(exist_ok=True, parents=True)
     for summary in summaries.values():
         save_path = save_dir / summary.filename
@@ -49,14 +49,12 @@ def save_summaries(summaries: BlogSummary, blog_name: str) -> None:
             f.write(summary.json(indent=2))
 
 
-def main(blog_name: str, summary_type: str = "default") -> None:
-    logger.debug(f"Processing {blog_name}")
-    articles = load_articles(blog_name)
-    articles = articles[:1]  # TODO: Remove
-    text_splitter = CharacterTextSplitter()
-
+def create_summaries(articles: list[BlogInfo], summary_type: str) -> dict[BlogInfo, BlogSummary]:
     model_name = "gpt-3.5-turbo"
     llm = ChatOpenAI(temperature=0, model_name=model_name)
+    text_splitter = CharacterTextSplitter()
+
+    articles = articles[:1]  # TODO: Remove
 
     summaries = {}
     for article in articles:
@@ -73,6 +71,13 @@ def main(blog_name: str, summary_type: str = "default") -> None:
         summary = BlogSummary(text=output, title=article.title)
         summaries[article] = summary
 
+    return summaries
+
+
+def main(blog_name: str, summary_type: str = "default") -> None:
+    logger.debug(f"Processing {blog_name}")
+    articles = load_articles(blog_name)
+    summaries = create_summaries(articles, summary_type)
     save_summaries(summaries, blog_name)
 
 

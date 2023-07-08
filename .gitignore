@@ -1,5 +1,9 @@
 # Project specific gitignores
-data/datasets
+data/data_lake/*
+data/data_warehouse/*
+!data/data_lake/README.md
+!data/data_warehouse/README.md
+logs
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

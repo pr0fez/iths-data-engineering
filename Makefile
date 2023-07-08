@@ -11,3 +11,6 @@ run_precommit:
 
 run_tests:
 	poetry run pytest tests/
+
+build_docker:
+	docker-compose build
