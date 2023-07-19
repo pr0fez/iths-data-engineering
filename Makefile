@@ -14,3 +14,6 @@ run_tests:
 
 build_docker:
 	docker-compose build
+
+start_airflow:
+	docker-compose up

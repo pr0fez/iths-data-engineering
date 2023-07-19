@@ -1,3 +1,5 @@
+import uuid
+from datetime import datetime
 from pathlib import Path
 
 import jsonargparse
@@ -7,6 +9,11 @@ from loguru import logger
 
 from newsfeed import log_utils
 from newsfeed.datatypes import BlogInfo
+
+
+def create_uuid_from_string(val: str) -> str:
+    assert isinstance(val, str)
+    return str(uuid.uuid5(uuid.NAMESPACE_DNS, val))
 
 
 def load_metadata(blog_name: str) -> BeautifulSoup:
@@ -24,12 +31,16 @@ def extract_articles_from_xml(parsed_xml: BeautifulSoup) -> list[BlogInfo]:
         raw_blog_text = item.find("content:encoded").text
         soup = BeautifulSoup(raw_blog_text, "html.parser")
         blog_text = soup.get_text()
+        title = item.title.text
+        unique_id = create_uuid_from_string(title)
         article_info = BlogInfo(
-            title=item.title.text,
+            unique_id=unique_id,
+            title=title,
             description=item.description.text,
-            published=pd.to_datetime(item.pubDate.text).date(),
             link=item.link.text,
             blog_text=blog_text,
+            published=pd.to_datetime(item.pubDate.text).date(),
+            timestamp=datetime.now(),
         )
         articles.append(article_info)
 

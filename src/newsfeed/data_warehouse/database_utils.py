@@ -28,11 +28,13 @@ def create_articles_table() -> None:
     create_table_query = f"""
         CREATE TABLE IF NOT EXISTS "{TABLE_NAME}" (
             id SERIAL PRIMARY KEY,
+            unique_id TEXT,
             title TEXT,
             description TEXT,
             link TEXT,
+            blog_text TEXT,
             published DATE,
-            blog_text TEXT
+            timestamp TIMESTAMP
         )
     """
     cursor.execute(create_table_query)
@@ -61,18 +63,20 @@ def add_articles(articles: list[BlogInfo]) -> None:
 
     # Execute SQL query to insert the article into the table
     insert_query = f"""
-        INSERT INTO  "{TABLE_NAME}" (title, description, link, published, blog_text)
-        VALUES (%s, %s, %s, %s, %s)
+        INSERT INTO  "{TABLE_NAME}" (unique_id, title, description, link, blog_text, published, timestamp)
+        VALUES (%s, %s, %s, %s, %s, %s, %s)
     """
     for article in articles:
         cursor.execute(
             insert_query,
             (
+                article.unique_id,
                 article.title,
                 article.description,
                 article.link,
-                article.published,
                 article.blog_text,
+                article.published,
+                article.timestamp,
             ),
         )
         connection.commit()
@@ -94,11 +98,13 @@ def load_articles() -> list[BlogInfo]:
     articles = []
     for row in rows:
         article = BlogInfo(
-            title=row[1],
-            description=row[2],
-            link=row[3],
-            published=pd.to_datetime(row[4]).date(),
+            unique_id=row[1],
+            title=row[2],
+            description=row[3],
+            link=row[4],
             blog_text=row[5],
+            published=pd.to_datetime(row[6]).date(),
+            timestamp=pd.to_datetime(row[7]),
         )
         articles.append(article)
 

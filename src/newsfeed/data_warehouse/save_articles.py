@@ -3,7 +3,7 @@ from loguru import logger
 
 from newsfeed import extract_articles, log_utils
 from newsfeed.data_warehouse import database_utils
-from newsfeed.datatypes import BlogInfo, BlogSummary
+from newsfeed.datatypes import BlogInfo
 
 
 def main(blog_name: str) -> None:

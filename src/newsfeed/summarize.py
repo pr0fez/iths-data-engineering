@@ -34,29 +34,28 @@ def load_articles(blog_name: str) -> list[BlogInfo]:
     save_dir = Path("data/data_warehouse", blog_name, "articles")
     for article_file in save_dir.glob("**/*.json"):
         article = pydantic.parse_file_as(BlogInfo, article_file)
-        # logger.debug(article)
         articles.append(article)
 
     return articles
 
 
-def save_summaries(summaries: dict[BlogInfo, BlogSummary], blog_name: str) -> None:
+def save_summaries(summaries: list[BlogSummary], blog_name: str) -> None:
     save_dir = Path("data/data_warehouse", blog_name, "summaries")
     save_dir.mkdir(exist_ok=True, parents=True)
-    for summary in summaries.values():
+    for summary in summaries:
         save_path = save_dir / summary.filename
         with open(save_path, "w") as f:
             f.write(summary.json(indent=2))
 
 
-def create_summaries(articles: list[BlogInfo], summary_type: str) -> dict[BlogInfo, BlogSummary]:
+def create_summaries(articles: list[BlogInfo], summary_type: str) -> list[BlogSummary]:
     model_name = "gpt-3.5-turbo"
     llm = ChatOpenAI(temperature=0, model_name=model_name)
     text_splitter = CharacterTextSplitter()
 
     articles = articles[:1]  # TODO: Remove
 
-    summaries = {}
+    summaries = []
     for article in articles:
         texts = text_splitter.split_text(article.blog_text)
         docs = [Document(page_content=text) for text in texts]
@@ -68,8 +67,8 @@ def create_summaries(articles: list[BlogInfo], summary_type: str) -> dict[BlogIn
         output = chain.run(docs)
         logger.debug(f"\n{output}")
 
-        summary = BlogSummary(text=output, title=article.title)
-        summaries[article] = summary
+        summary = BlogSummary(text=output, title=article.title, unique_id=article.unique_id)
+        summaries.append(summary)
 
     return summaries
 

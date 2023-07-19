@@ -1,17 +1,16 @@
-from datetime import date
+from datetime import date, datetime
 
 import pydantic
 
 
 class BlogInfo(pydantic.BaseModel):
+    unique_id: str
     title: str
     description: str
     link: str
-    published: date
     blog_text: str
-
-    class Config:
-        frozen = True
+    published: date
+    timestamp: datetime
 
     @property
     def filename(self) -> str:
@@ -19,6 +18,7 @@ class BlogInfo(pydantic.BaseModel):
 
 
 class BlogSummary(pydantic.BaseModel):
+    unique_id: str  # This should be the same as for BlogInfo so that they can be linked
     title: str
     text: str
 
