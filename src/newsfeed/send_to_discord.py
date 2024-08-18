@@ -23,10 +23,10 @@ def load_summaries(blog_name: str) -> list[BlogSummary]:
 
 
 def send_to_discord(summary: BlogSummary) -> None:
-    discord_webhook_url = ""
+    discord_webhook_url = "<your webhook here>"
     webhook = SyncWebhook.from_url(discord_webhook_url)
 
-    group_name = ""
+    group_name = "<NoName>"
     message = f"**Group name: {group_name}**\n**{summary.title}**\n```{summary.text}```"
     webhook.send(message)
 
